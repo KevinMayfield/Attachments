@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +47,7 @@ public class BinaryResourceProvider implements IResourceProvider {
 
             method.setOperationOutcome(opOutcome);
 
+            fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
             File file = new File("c:/patientattachments/"+ fileName);
             try (FileOutputStream outputStream = new FileOutputStream(file, false)) {
                 int read;
@@ -71,7 +74,9 @@ public class BinaryResourceProvider implements IResourceProvider {
 
         if (idType != null) {
             System.out.println(idType.getIdPart());
-            Path fileToDeletePath = Paths.get("c:/patientattachments/"+idType.getIdPart());
+            String fileName = idType.getIdPart();
+            fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
+            Path fileToDeletePath = Paths.get("c:/patientattachments/"+fileName);
             Files.delete(fileToDeletePath);
         }
 
